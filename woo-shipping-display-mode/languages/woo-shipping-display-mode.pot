@@ -1,0 +1,219 @@
+# Copyright (C) 2023 theDotstore
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Shipping Method Display Style for WooCommerce 3.7.9\n"
+"Report-Msgid-Bugs-To: https://www.multidots.com/contact/\n"
+"POT-Creation-Date: 2023-11-03 06:14:55+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Sagar Jariwala <sagar.jariwala@multidots.com>\n"
+"Language-Team: Sagar Jariwala <sagar.jariwala@multidots.com>\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: India\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: admin/class-woo-shipping-display-mode-admin.php:165
+msgid ""
+"%s WooCommerce shipping method display style plugin provides a "
+"configuration to display shipping methods as Radio button or select box on "
+"the checkout page."
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:202
+msgid "Go to Woocommerce Shipping Method Display Style Settings"
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:222
+msgid ""
+"Shipping Method Display Style for WooCommerce plugin provides you an "
+"interface in WooCommerce setting section from admin side. As you know "
+"WooCommerce has removed choose shipping display mode option from 2.5.1 "
+"version. So, this plugin provides these features, admin can choose shipping "
+"display modes like radio option or select option for shipping display mode."
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:224
+msgid ""
+"This Plugin is useful when you are using 2.5.2 or higher version of "
+"Woocommerce and you have to use more than 20 or 30 or more then that "
+"Shipping Method at that time you do not have forced to display all shipping "
+"method only using radio button, but you have also chosen a select option "
+"for display shipping mode and by choosing select option shipping method is "
+"displayed in the drop down box so you can avoid lengthy listing of shipping "
+"method."
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:226
+msgid "We have added"
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:227
+msgid "Select shipping mode"
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:227
+msgid "option for default shipping method."
+msgstr ""
+
+#: admin/class-woo-shipping-display-mode-admin.php:250
+msgid "Support"
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:56
+#: admin/partials/woo-shipping-display-mode-admin-display.php:78
+msgid "Shipping Method Display Mode"
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:83
+msgid "Select Display Mode"
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:94
+msgid "Display shipping methods with \"radio\" buttons"
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:103
+msgid "Display shipping methods in a dropdown"
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:112
+msgid "Customised theme is enabled"
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:117
+msgid ""
+"<b>Note: </b>Checked to override the file "
+"(\"<b>your-theme/woocommerce/cart/cart-shipping.php</b>\"), first check "
+"cart page design has not changed."
+msgstr ""
+
+#: admin/partials/woo-shipping-display-mode-admin-display.php:125
+msgid ""
+"<p><span>Note: </span>If there is only one shipping method available in "
+"your cart then it will showcase shipping method as title without radio "
+"button or dropdown. <a href=\"%1$s\" target=\"_blank\">Click Here</a> for "
+"detail.</span><p>"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:96
+#. translators: Number of years
+msgid "%s years"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:98
+msgid "a year"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:105
+#. translators: Number of weeks
+msgid "%s weeks"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:107
+msgid "a week"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:114
+#. translators: Number of days
+msgid "%s days"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:116
+msgid "a day"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:123
+#. translators: Number of hours
+msgid "%s hours"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:125
+msgid "an hour"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:132
+#. translators: Number of minutes
+msgid "%s minutes"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:134
+msgid "a minute"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:141
+#. translators: Number of seconds
+msgid "%s seconds"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:143
+msgid "a second"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:276
+#. translators: 1. Name
+msgid "%s WordPress Plugin"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:280
+#. translators: 1. Name
+msgid "Are you enjoying %s Plugin?"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:283
+#. translators: 1. Name, 2. Time
+msgid ""
+"You have been using %1$s for %2$s now. Mind leaving a review to let us know "
+"what you think? We'd really appreciate it!"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:290
+msgid "Leave a Review"
+msgstr ""
+
+#: includes/class-woo-shipping-display-mode-user-feedback.php:292
+msgid "No thanks / I already have"
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:77
+#. Translators: $s shipping destination.
+msgid "Shipping to %s."
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:78
+msgid "Change address"
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:80
+msgid "Shipping options will be updated during checkout."
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:87
+msgid "Enter your address to view shipping options."
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:89
+msgid ""
+"There are no shipping options available. Please ensure that your address "
+"has been entered correctly, or contact us if you need any help."
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:92
+#. Translators: $s shipping destination.
+msgid "No shipping options were found for %s."
+msgstr ""
+
+#: woocommerce/cart/cart-shipping.php:93
+msgid "Enter a different address"
+msgstr ""

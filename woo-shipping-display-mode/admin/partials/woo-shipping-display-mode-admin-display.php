@@ -73,7 +73,6 @@ class WC_Settings_Shipping_Display_Mode_Methods {
         wp_enqueue_script('jquery-ui-core');
 	    do_action('woocommerce_update_options_shipping_mode');
         $shiiping_method_get_value = get_option('woocommerce_shipping_method_format');
-        $theme_template_get_value = get_option('wsdm_override_custom_theme_template');
         ?>
         <h3><?php esc_html_e('Shipping Method Display Mode', 'woo-shipping-display-mode'); ?></h3>
         <table class="form-table" id="shipping_display_table">
@@ -91,7 +90,7 @@ class WC_Settings_Shipping_Display_Mode_Methods {
                                         echo 'checked="checked"';
                                     }
                                     ?>>
-                                    <span><?php esc_html_e('Display shipping methods with "radio" buttons', 'woo-shipping-display-mode'); ?></span>
+                                    <span><?php esc_html_e('Radio Button (Default)', 'woo-shipping-display-mode'); ?></span>
                                 </label>
                             </li>
                             <li>
@@ -100,24 +99,11 @@ class WC_Settings_Shipping_Display_Mode_Methods {
                                         echo 'checked="checked"';
                                     }
                                     ?>>
-                                    <span><?php esc_html_e('Display shipping methods in a dropdown', 'woo-shipping-display-mode'); ?></span>
+                                    <span><?php esc_html_e('Dropdown', 'woo-shipping-display-mode'); ?></span>
                                 </label>
                             </li>
                         </ul>
                     </fieldset>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" class="titledesc">
-                    <label for="wsdm_override_custom_theme_template"><?php esc_html_e('Customised theme is enabled', 'woo-shipping-display-mode'); ?><span class="woocommerce-help-tip" data-tip="<?php echo esc_attr('Check this option if settings does not work', 'woo-shipping-display-mode'); ?>"></span></label>
-                </th>
-                <td class="forminp forminp-radio">
-                    <label>
-                        <input name="wsdm_override_custom_theme_template" value="yes" type="checkbox" <?php echo $theme_template_get_value === 'yes' ? 'checked="checked"' : '' ?>>
-                        <span><?php echo wp_kses( __( '<b>Note: </b>Checked to override the file ("<b>your-theme/woocommerce/cart/cart-shipping.php</b>"), first check cart page design has not changed.', 'woo-shipping-display-mode' ), array(
-                                'b' => array(),
-                            )); ?></span>
-                    </label>
                 </td>
             </tr>
         </table>
@@ -142,28 +128,23 @@ class WC_Settings_Shipping_Display_Mode_Methods {
      * @since 1.0.0
      */
     public function woo_shipping_update_options() {
-	    $page_no  = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_NUMBER_INT );
-        if (isset($page_no)) {
+
+	    $is_submitted  = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
+        if ( !empty( $is_submitted ) ) {
             // verify nonce
 	        $woo_shipping_display_mode  = filter_input( INPUT_POST, 'woo_shipping_display_mode', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
             if (!isset($woo_shipping_display_mode) || !wp_verify_nonce($woo_shipping_display_mode, basename(__FILE__))) {
                 die('Failed security check');
             }
 	        $woocommerce_shipping_method_format  = filter_input( INPUT_POST, 'woocommerce_shipping_method_format', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-            $wsdm_override_custom_theme_template  = filter_input( INPUT_POST, 'wsdm_override_custom_theme_template', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
             if (!empty($woocommerce_shipping_method_format)) {
                 $display_mode = sanitize_text_field($woocommerce_shipping_method_format);
 
 	            update_option('woocommerce_shipping_method_format', $display_mode, '', 'yes');
             }
-            if (!empty($wsdm_override_custom_theme_template)) {
-                $override_theme_template = sanitize_text_field($wsdm_override_custom_theme_template);
-
-                update_option('wsdm_override_custom_theme_template', $override_theme_template);
-            } else {
-                update_option('wsdm_override_custom_theme_template', 'no');
-            }
         }
     }
+    
 }

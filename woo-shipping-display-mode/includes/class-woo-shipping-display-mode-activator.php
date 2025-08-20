@@ -32,7 +32,6 @@ class Woo_Shipping_Display_Mode_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() { 
-
-		set_transient( '_welcome_screen_shipping_display_mode_activation_redirect_data', true, 30 );
+		// Nothing to do here.
 	}
 }

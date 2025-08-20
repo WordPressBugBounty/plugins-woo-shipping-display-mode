@@ -1,15 +1,15 @@
 === Shipping Method Display Style for WooCommerce ===
 Plugin Name: Shipping Method Display Style for WooCommerce
-Author: Thedotstore
+Author: Thedotstore, jariwalasagar
 Plugin URI: https://wordpress.org/plugins/woo-shipping-display-mode/
 Author URI: https://www.thedotstore.com/
 Contributors: dots
-Stable tag: 3.7.9
+Stable tag: 3.8.0
 Tags: Shipping, Dropdown, Radio, Woocommerce Shipping, shipping display mode
 Requires at least: 5.0
 Requires PHP: 7.2
-Tested up to: 6.6
-WC tested up to: 9.1
+Tested up to: 6.8
+WC tested up to: 10.1.0
 Donate link: -
 Copyright: (c) 2015-2019 Thedotstore all rights reserved (support@thedotstore.com)
 License: GPLv3 or later
@@ -28,6 +28,12 @@ We have added "Select shipping mode" option for default shipping method.
 Plugin Demo : <a href ="http://pluginsdemo.thedotstore.com/woo-shipping-display-mode/" target="_blank">View Demo</a>
 
 [youtube https://www.youtube.com/watch?v=yM9ZsJz8RsQ]
+
+== 🎯 Supercharge Your Store Performance ==
+
+Gain access to <strong>50 expert tips</strong> covering everything from <strong>site speed</strong> and <strong>user experience</strong> to advanced sales strategies, each with impact scores to help you prioritize what truly drives results.
+
+<a href ="https://www.thedotstore.com/?popup_id=76452&utm_source=freeplugin&utm_medium=content&utm_id=ebook1_display_mode" target="_blank">Download Free eBook</a>
 
 == EXPLORE OUR OTHER PLUGINS TO SUPERCHARGE YOUR WEBSITE: ==
 
@@ -64,9 +70,12 @@ Plugin Demo : <a href ="http://pluginsdemo.thedotstore.com/woo-shipping-display-
 3.
 4.
 
-== Upgrade Notice ==
-
 == Changelog ==
+= 3.8.0 =
+* [Enhancement] Remove dependency from woocommerce template overide from plugin
+* [Enhancement] Compatible with WooCommerce 10.0.x
+* [Enhancement] Compatible with WordPress 6.8.x
+
 = 3.7.9 =
 * [Enhancement] UI enhancement
 * [Enhancement] Plugin compatibility with PHP 8.1.x

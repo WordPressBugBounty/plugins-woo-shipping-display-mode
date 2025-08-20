@@ -28,6 +28,14 @@ if (!defined('ABSPATH')) {
  */
 class Woo_Shipping_Display_Mode_i18n {
 
+    /**
+     * The domain specified for this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string    $domain    The domain identifier for this plugin.
+     */
+    private $domain;
 
 	/**
 	 * Load the plugin text domain for translation.
@@ -37,9 +45,20 @@ class Woo_Shipping_Display_Mode_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'woo-shipping-display-mode',
+			$this->domain,
 			false,
-			dirname( plugin_basename(__FILE__) ) . '/languages/'
+			dirname( dirname( plugin_basename(__FILE__) ) ) . '/languages/'
 		);
 	}
+
+    /**
+     * Set the domain equal to that of the specified domain.
+     *
+     * @param string $domain The domain that represents the locale of this plugin.
+     *
+     * @since    1.0.0
+     */
+    public function set_domain( $domain ) {
+        $this->domain = $domain;
+    }
 }

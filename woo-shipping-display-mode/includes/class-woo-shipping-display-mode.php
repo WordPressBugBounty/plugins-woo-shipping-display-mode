@@ -74,9 +74,12 @@ class Woo_Shipping_Display_Mode {
 		$this->version     = '1.0.0';
 
 		$this->load_dependencies();
+        $this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->initialize_blocks_integration();
 
+        add_filter( 'plugin_action_links_' . WSDM_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
 	}
 
 	/**
@@ -121,14 +124,29 @@ class Woo_Shipping_Display_Mode {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-woo-shipping-display-mode-public.php';
 
 		/**
-		 * User Feedback popup notice
+		 * WooCommerce Blocks integration
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-shipping-display-mode-user-feedback.php';		
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-shipping-display-mode-blocks.php';
 
 		$this->loader = new Woo_Shipping_Display_Mode_Loader();
 
 	}
 
+    /**
+     * Define the locale for this plugin for internationalization.
+     *
+     * Uses the Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_i18n class in order to set the domain and to register the hook
+     * with WordPress.
+     *
+     * @since    1.0.0
+     * @access   private
+     */
+    private function set_locale() {
+        $plugin_i18n = new Woo_Shipping_Display_Mode_i18n();
+        $plugin_i18n->set_domain( $this->get_plugin_name() );
+        $this->loader->add_action( 'init', $plugin_i18n, 'load_plugin_textdomain' );
+    }
+    
 	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
@@ -139,13 +157,15 @@ class Woo_Shipping_Display_Mode {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Woo_Shipping_Display_Mode_Admin( $this->get_plugin_name(), $this->get_version() );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 10 );
+
+        // Enqueue styles and scripts
+        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 10 );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts', 10 );
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'woo_shipping_admin_init_own' );
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'wo_shipping_welcome_shipping_display_mode_screen_do_activation_redirect' );
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'wo_shipping_welcome_pages_screen_shipping_display_mode' );
-		$this->loader->add_action( 'wo_shipping_woocommerce_shipping_display_mode_about', $plugin_admin, 'wo_shipping_woocommerce_shipping_display_mode_about' );
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'wo_shipping_adjust_the_wp_menu', 999 );
+        
+        // Initialize admin settings page
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'wsdm_woo_shipping_admin_init_own' );
+        
+        // Add plugin row meta
 		$this->loader->add_action( 'plugin_row_meta', $plugin_admin, 'wsdm_plugin_row_meta',10,2 );
 	}
 
@@ -180,10 +200,27 @@ class Woo_Shipping_Display_Mode {
 	private function define_public_hooks() {
 
 		$plugin_public = new Woo_Shipping_Display_Mode_Public( $this->get_plugin_name(), $this->get_version() );
+
+        // Enqueue styles and scripts
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		$this->loader->add_filter( 'woocommerce_locate_template', $plugin_public, 'wo_shipping_woocommerce_locate_template', 5, 3 );
-		$this->loader->add_filter( 'woocommerce_shipping_chosen_method', $plugin_public, 'wo_shipping_woocommerce_shipping_chosen_method_custom', 10, 2 );
+		
+		// Modify shipping methods display
+		$this->loader->add_action( 'init', $plugin_public, 'wsdm_modify_shipping_methods_display' );
+		$this->loader->add_filter( 'body_class', $plugin_public, 'wsdm_add_body_class_for_shipping_mode' );
+		$this->loader->add_filter( 'woocommerce_package_rates', $plugin_public, 'wsdm_filter_store_api_shipping_rates', 10, 2 );
+	}
+
+	/**
+	 * Initialize WooCommerce Blocks integration.
+	 *
+	 * @since    3.8.1
+	 * @access   private
+	 */
+	private function initialize_blocks_integration() {
+		if ( class_exists( 'Woo_Shipping_Display_Mode_Blocks' ) ) {
+			new Woo_Shipping_Display_Mode_Blocks();
+		}
 	}
 
 	/**
@@ -203,5 +240,20 @@ class Woo_Shipping_Display_Mode {
 	 */
 	public function get_loader() {
 		return $this->loader;
+	}
+
+    /**
+	 * Show action links on the plugin screen.
+	 *
+	 * @param mixed $links Plugin Action links.
+	 *
+	 * @return array
+	 */
+	public static function plugin_action_links( $links ) {
+		$action_links = array(
+			'settings' => '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping_mode' ) . '" aria-label="' . esc_attr__( 'View WooCommerce settings', 'woo-shipping-display-mode' ) . '">' . esc_html__( 'Settings Main', 'woo-shipping-display-mode' ) . '</a>',
+		);
+
+		return array_merge( $action_links, $links );
 	}
 }

@@ -24,7 +24,7 @@ if ( !defined( 'WPINC' ) ) {
     die;
 }
 if ( function_exists( 'wsdm_fs' ) ) {
-    wsdm_fs()->set_basename( true, __FILE__ );
+    wsdm_fs()->set_basename( false, __FILE__ );
     return;
 }
 if ( !function_exists( 'wsdm_fs' ) ) {
@@ -34,15 +34,15 @@ if ( !function_exists( 'wsdm_fs' ) ) {
         if ( !isset( $wsdm_fs ) ) {
             // Include Freemius SDK.
             require_once dirname( __FILE__ ) . '/freemius/start.php';
-            $wsdm_fs = fs_dynamic_init( array( // @phpstan-ignore-line
+            $wsdm_fs = fs_dynamic_init( array(
                 'id'             => '4753',
                 'slug'           => 'woo-shipping-display-mode',
                 'type'           => 'plugin',
                 'public_key'     => 'pk_3004a64759ed9ac7042e91bf71969',
-                'is_premium'     => true,
+                'is_premium'     => false,
                 'premium_suffix' => 'Pro',
                 'has_addons'     => false,
-                'has_paid_plans' => true,
+                'has_paid_plans' => false,
                 'menu'           => array(
                     'first-path' => 'admin.php?page=wc-settings&tab=shipping_mode',
                     'support'    => false,
@@ -105,7 +105,6 @@ function run_woo_shipping_display_mode() {
 }
 
 run_woo_shipping_display_mode();
-
 /**
  * Plugin compability with WooCommerce HPOS
  *

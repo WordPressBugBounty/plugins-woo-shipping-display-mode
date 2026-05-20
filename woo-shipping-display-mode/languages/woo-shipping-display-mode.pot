@@ -1,14 +1,14 @@
-# Copyright (C) 2025 theDotstore
+# Copyright (C) 2026 theDotstore
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shipping Method Display Style for WooCommerce 3.8.0\n"
+"Project-Id-Version: Shipping Method Display Style for WooCommerce 3.8.1\n"
 "Report-Msgid-Bugs-To: https://www.multidots.com/contact/\n"
-"POT-Creation-Date: 2025-08-20 12:11:32+00:00\n"
+"POT-Creation-Date: 2026-05-20 07:22:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Sagar Jariwala <sagar.jariwala@multidots.com>\n"
 "Language-Team: Sagar Jariwala <sagar.jariwala@multidots.com>\n"
 "Language: en\n"
@@ -69,6 +69,6 @@ msgstr ""
 msgid "Settings Main"
 msgstr ""
 
-#: public/class-woo-shipping-display-mode-public.php:79
+#: public/class-woo-shipping-display-mode-public.php:101
 msgid "Shipping options"
 msgstr ""

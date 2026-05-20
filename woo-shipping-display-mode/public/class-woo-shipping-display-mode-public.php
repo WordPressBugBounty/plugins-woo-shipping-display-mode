@@ -56,11 +56,29 @@ class Woo_Shipping_Display_Mode_Public {
 	}
 
 	/**
+	 * Whether cart/checkout assets should load on the current request.
+	 *
+	 * @since 3.8.0
+	 * @return bool
+	 */
+	private function wsdm_should_enqueue_assets() {
+		if ( ! function_exists( 'is_cart' ) || ! function_exists( 'is_checkout' ) ) {
+			return false;
+		}
+
+		return is_cart() || is_checkout();
+	}
+
+	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+		if ( ! $this->wsdm_should_enqueue_assets() ) {
+			return;
+		}
+
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-shipping-display-mode-public.css', array(), $this->version, 'all' );
 	}
 
@@ -70,6 +88,10 @@ class Woo_Shipping_Display_Mode_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+		if ( ! $this->wsdm_should_enqueue_assets() ) {
+			return;
+		}
+
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-shipping-display-mode-public.js', array( 'jquery' ), $this->version, false );
 		
 		// Localize script for block compatibility

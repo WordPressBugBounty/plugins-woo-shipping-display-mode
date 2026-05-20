@@ -85,25 +85,21 @@
 }
 
 /* Hide the original radio methods when in select mode */
-.wsdm-shipping-select-mode #shipping_method li{
+.wsdm-shipping-select-mode #shipping_method:has(li + li) li {
     display: none;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-    .wsdm-shipping-select,
-    .wsdm-block-shipping-select {
+    body:not(.theme-astra) .wsdm-shipping-select,
+    body:not(.theme-astra) .wsdm-block-shipping-select {
         background-color: #1a1a1a;
         border-color: #666;
         color: #fff;
     }
-    
-    .wsdm-block-shipping-select {
-        background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ccc' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
-    }
-    
-    .wsdm-shipping-select:focus,
-    .wsdm-block-shipping-select:focus {
+        
+    body:not(.theme-astra) .wsdm-shipping-select:focus,
+    body:not(.theme-astra) .wsdm-block-shipping-select:focus {
         border-color: #46a7d1;
         box-shadow: 0 0 0 2px rgba(70, 167, 209, 0.2);
     }

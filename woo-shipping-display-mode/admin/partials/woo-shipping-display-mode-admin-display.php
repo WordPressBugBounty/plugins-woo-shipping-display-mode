@@ -129,6 +129,10 @@ class WC_Settings_Shipping_Display_Mode_Methods {
      */
     public function woo_shipping_update_options() {
 
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
 	    $is_submitted  = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
         if ( !empty( $is_submitted ) ) {
@@ -142,7 +146,7 @@ class WC_Settings_Shipping_Display_Mode_Methods {
             if (!empty($woocommerce_shipping_method_format)) {
                 $display_mode = sanitize_text_field($woocommerce_shipping_method_format);
 
-	            update_option('woocommerce_shipping_method_format', $display_mode, '', 'yes');
+                update_option( 'woocommerce_shipping_method_format', $display_mode, 'yes' );
             }
         }
     }

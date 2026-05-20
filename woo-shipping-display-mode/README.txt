@@ -1,15 +1,15 @@
 === Shipping Method Display Style for WooCommerce ===
 Plugin Name: Shipping Method Display Style for WooCommerce
-Author: Thedotstore, jariwalasagar
+Author: Thedotstore
 Plugin URI: https://wordpress.org/plugins/woo-shipping-display-mode/
 Author URI: https://www.thedotstore.com/
 Contributors: dots
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 Tags: Shipping, Dropdown, Radio, Woocommerce Shipping, shipping display mode
 Requires at least: 5.0
 Requires PHP: 7.2
-Tested up to: 6.8
-WC tested up to: 10.1.0
+Tested up to: 6.9.4
+WC tested up to: 10.7.0
 Donate link: -
 Copyright: (c) 2015-2019 Thedotstore all rights reserved (support@thedotstore.com)
 License: GPLv3 or later
@@ -71,6 +71,12 @@ Gain access to <strong>50 expert tips</strong> covering everything from <strong>
 4.
 
 == Changelog ==
+= 3.8.1 =
+* [Enhancement] Fixed the dropdown text visibility issue in specific scenarios.
+* [Enhancement] Improved plugin code security and performed vulnerability checks for enhanced stability and protection.
+* [Enhancement] Compatible with WooCommerce 10.7.x
+* [Enhancement] Compatible with WordPress 6.9.x
+
 = 3.8.0 =
 * [Enhancement] Remove dependency from woocommerce template overide from plugin
 * [Enhancement] Compatible with WooCommerce 10.0.x

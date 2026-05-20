@@ -4,7 +4,7 @@
  * Plugin Name:       Shipping Method Display Style for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/woo-shipping-display-mode/
  * Description:       This plugin provides a configuration to display shipping methods as Radio button or select box on the checkout page.
- * Version:           3.8.0
+ * Version:           3.8.1
  * Author:            theDotstore
  * Author URI:        https://www.thedotstore.com/
  * License:           GPL-3.0+
@@ -14,8 +14,8 @@
  * Requires Plugins:  woocommerce
  * 
  * WC requires at least:4.5
- * WP tested up to:     6.8.2
- * WC tested up to:     10.1.0
+ * WP tested up to:     6.9.4
+ * WC tested up to:     10.7.0
  * Requires PHP:        7.2
  * Requires at least:   5.0
  */
@@ -35,19 +35,20 @@ if ( !function_exists( 'wsdm_fs' ) ) {
             // Include Freemius SDK.
             require_once dirname( __FILE__ ) . '/freemius/start.php';
             $wsdm_fs = fs_dynamic_init( array(
-                'id'             => '4753',
-                'slug'           => 'woo-shipping-display-mode',
-                'type'           => 'plugin',
-                'public_key'     => 'pk_3004a64759ed9ac7042e91bf71969',
-                'is_premium'     => false,
-                'premium_suffix' => 'Pro',
-                'has_addons'     => false,
-                'has_paid_plans' => false,
-                'menu'           => array(
+                'id'               => '4753',
+                'slug'             => 'woo-shipping-display-mode',
+                'type'             => 'plugin',
+                'public_key'       => 'pk_3004a64759ed9ac7042e91bf71969',
+                'is_premium'       => false,
+                'premium_suffix'   => 'Pro',
+                'has_addons'       => false,
+                'has_paid_plans'   => true,
+                'menu'             => array(
                     'first-path' => 'admin.php?page=wc-settings&tab=shipping_mode',
                     'support'    => false,
                 ),
-                'is_live'        => true,
+                'is_live'          => true,
+                'is_org_compliant' => true,
             ) );
         }
         return $wsdm_fs;

@@ -4,12 +4,12 @@ Author: Thedotstore
 Plugin URI: https://wordpress.org/plugins/woo-shipping-display-mode/
 Author URI: https://www.thedotstore.com/
 Contributors: dots
-Stable tag: 3.8.1
+Stable tag: 3.8.2
 Tags: Shipping, Dropdown, Radio, Woocommerce Shipping, shipping display mode
 Requires at least: 5.0
 Requires PHP: 7.2
-Tested up to: 6.9.4
-WC tested up to: 10.7.0
+Tested up to: 7.1.3
+WC tested up to: 11.2.1
 Donate link: -
 Copyright: (c) 2015-2019 Thedotstore all rights reserved (support@thedotstore.com)
 License: GPLv3 or later
@@ -71,6 +71,11 @@ Gain access to <strong>50 expert tips</strong> covering everything from <strong>
 4.
 
 == Changelog ==
+= 3.8.2 =
+* [Enhancement] Added an optional shipping dropdown placeholder on the cart and checkout pages.
+* [Enhancement] Compatible with WooCommerce 11.2.x
+* [Enhancement] Compatible with WordPress 7.1.x
+
 = 3.8.1 =
 * [Enhancement] Fixed the dropdown text visibility issue in specific scenarios.
 * [Enhancement] Improved plugin code security and performed vulnerability checks for enhanced stability and protection.

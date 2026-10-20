@@ -4,7 +4,7 @@
  * Plugin Name:       Shipping Method Display Style for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/woo-shipping-display-mode/
  * Description:       This plugin provides a configuration to display shipping methods as Radio button or select box on the checkout page.
- * Version:           3.8.1
+ * Version:           3.8.2
  * Author:            theDotstore
  * Author URI:        https://www.thedotstore.com/
  * License:           GPL-3.0+
@@ -14,8 +14,8 @@
  * Requires Plugins:  woocommerce
  * 
  * WC requires at least:4.5
- * WP tested up to:     6.9.4
- * WC tested up to:     10.7.0
+ * WP tested up to:     7.1.3
+ * WC tested up to:     11.2.1
  * Requires PHP:        7.2
  * Requires at least:   5.0
  */

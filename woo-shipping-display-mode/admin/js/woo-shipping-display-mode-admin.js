@@ -29,5 +29,15 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 	$(document).ready(function(){
+		var $modeInputs = $('input[name="woocommerce_shipping_method_format"]');
+		var $placeholderSetting = $('.wsdm-placeholder-setting');
+
+		function togglePlaceholderSetting() {
+			var isDropdown = $modeInputs.filter(':checked').val() === 'select';
+			$placeholderSetting.toggleClass('is-hidden', !isDropdown);
+		}
+
+		$modeInputs.on('change', togglePlaceholderSetting);
+		togglePlaceholderSetting();
 	});
 })( jQuery );

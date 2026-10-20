@@ -71,7 +71,7 @@ class Woo_Shipping_Display_Mode {
 	public function __construct() {
 
 		$this->plugin_name = 'woo-shipping-display-mode';
-		$this->version     = '1.0.0';
+		$this->version     = '3.8.2';
 
 		$this->load_dependencies();
         $this->set_locale();
@@ -208,6 +208,9 @@ class Woo_Shipping_Display_Mode {
 		// Modify shipping methods display
 		$this->loader->add_action( 'init', $plugin_public, 'wsdm_modify_shipping_methods_display' );
 		$this->loader->add_filter( 'body_class', $plugin_public, 'wsdm_add_body_class_for_shipping_mode' );
+		$this->loader->add_action( 'woocommerce_before_calculate_totals', $plugin_public, 'wsdm_sync_placeholder_shipping_choice', 1 );
+		$this->loader->add_filter( 'woocommerce_shipping_chosen_method', $plugin_public, 'wsdm_filter_chosen_shipping_method', 10, 3 );
+		$this->loader->add_action( 'woocommerce_store_api_cart_select_shipping_rate', $plugin_public, 'wsdm_store_api_shipping_choice', 10, 2 );
 		$this->loader->add_filter( 'woocommerce_package_rates', $plugin_public, 'wsdm_filter_store_api_shipping_rates', 10, 2 );
 	}
 

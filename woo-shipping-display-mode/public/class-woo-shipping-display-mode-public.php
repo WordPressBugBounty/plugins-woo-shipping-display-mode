@@ -99,6 +99,8 @@ class Woo_Shipping_Display_Mode_Public {
 			'shipping_format' => get_option( 'woocommerce_shipping_method_format', 'radio' ),
 			'is_blocks_enabled' => $this->wsdm_is_woocommerce_blocks_enabled(),
             'shipping_options_label' => esc_html__( 'Shipping options', 'woo-shipping-display-mode' ),
+			'placeholder_enabled' => $this->wsdm_placeholder_enabled(),
+			'placeholder_text' => $this->wsdm_get_placeholder_text(),
 		) );
 	}
 
@@ -187,5 +189,153 @@ class Woo_Shipping_Display_Mode_Public {
 		}
 		
 		return $rates;
+	}
+
+	/**
+	 * Whether the dropdown placeholder is active.
+	 *
+	 * @since 3.8.2
+	 * @return bool
+	 */
+	private function wsdm_placeholder_enabled() {
+		return 'select' === get_option( 'woocommerce_shipping_method_format', 'radio' )
+			&& 'yes' === get_option( 'wsdm_add_shipping_placeholder', 'no' );
+	}
+
+	/**
+	 * Placeholder label shown as the first dropdown option.
+	 *
+	 * @since 3.8.2
+	 * @return string
+	 */
+	private function wsdm_get_placeholder_text() {
+		$text = get_option( 'wsdm_shipping_placeholder_text', '' );
+		$text = is_string( $text ) ? trim( $text ) : '';
+
+		if ( '' === $text ) {
+			$text = __( 'Select Shipping', 'woo-shipping-display-mode' );
+		}
+
+		return $text;
+	}
+
+	/**
+	 * Remember an explicit customer choice and clear WooCommerce's auto-selected rate.
+	 *
+	 * @since 3.8.2
+	 * @return void
+	 */
+	public function wsdm_sync_placeholder_shipping_choice() {
+		if ( ! $this->wsdm_placeholder_enabled() || ! function_exists( 'WC' ) || ! WC()->session ) {
+			return;
+		}
+
+		$explicit = WC()->session->get( 'wsdm_explicit_shipping', array() );
+		if ( ! is_array( $explicit ) ) {
+			$explicit = array();
+		}
+
+		if ( isset( $_POST['shipping_method'] ) && is_array( $_POST['shipping_method'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			foreach ( wp_unslash( $_POST['shipping_method'] ) as $index => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$index = absint( $index );
+				$value = is_string( $value ) ? wc_clean( $value ) : '';
+
+				if ( '' === $value ) {
+					unset( $explicit[ $index ] );
+				} else {
+					$explicit[ $index ] = $value;
+				}
+			}
+
+			WC()->session->set( 'wsdm_explicit_shipping', $explicit );
+		}
+
+		$chosen = WC()->session->get( 'chosen_shipping_methods', array() );
+		if ( ! is_array( $chosen ) ) {
+			$chosen = array();
+		}
+
+		foreach ( $explicit as $index => $method_id ) {
+			$chosen[ absint( $index ) ] = $method_id;
+		}
+
+		foreach ( $chosen as $index => $method ) {
+			$index = absint( $index );
+			if ( ! isset( $explicit[ $index ] ) ) {
+				$chosen[ $index ] = '';
+			}
+		}
+
+		WC()->session->set( 'chosen_shipping_methods', $chosen );
+	}
+
+	/**
+	 * Keep a previously chosen rate when it still exists. Otherwise leave shipping unselected.
+	 *
+	 * @since 3.8.2
+	 * @param string $default       WooCommerce default rate ID.
+	 * @param array  $rates         Package rates.
+	 * @param string $chosen_method Previously chosen rate ID.
+	 * @return string
+	 */
+	public function wsdm_filter_chosen_shipping_method( $default, $rates, $chosen_method ) {
+		if ( ! $this->wsdm_placeholder_enabled() || ! is_array( $rates ) || count( $rates ) < 2 ) {
+			return $default;
+		}
+
+		$chosen_method = is_string( $chosen_method ) ? $chosen_method : '';
+		$explicit      = ( function_exists( 'WC' ) && WC()->session ) ? WC()->session->get( 'wsdm_explicit_shipping', array() ) : array();
+		if ( ! is_array( $explicit ) ) {
+			$explicit = array();
+		}
+
+		if ( '' !== $chosen_method && isset( $rates[ $chosen_method ] ) && in_array( $chosen_method, $explicit, true ) ) {
+			return $chosen_method;
+		}
+
+		if ( '' !== $chosen_method && ! isset( $rates[ $chosen_method ] ) && function_exists( 'WC' ) && WC()->session ) {
+			foreach ( $explicit as $index => $method_id ) {
+				if ( $method_id === $chosen_method ) {
+					unset( $explicit[ $index ] );
+				}
+			}
+			WC()->session->set( 'wsdm_explicit_shipping', $explicit );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Store a Blocks checkout shipping choice, including a cleared placeholder.
+	 *
+	 * @since 3.8.2
+	 * @param string|null $package_id Package ID.
+	 * @param string      $rate_id    Selected rate ID.
+	 * @return void
+	 */
+	public function wsdm_store_api_shipping_choice( $package_id, $rate_id ) {
+		if ( ! $this->wsdm_placeholder_enabled() || ! function_exists( 'WC' ) || ! WC()->session ) {
+			return;
+		}
+
+		$explicit = WC()->session->get( 'wsdm_explicit_shipping', array() );
+		if ( ! is_array( $explicit ) ) {
+			$explicit = array();
+		}
+
+		$rate_id = is_string( $rate_id ) ? wc_clean( $rate_id ) : '';
+
+		if ( null === $package_id || '' === $package_id ) {
+			$explicit = ( '' === $rate_id ) ? array() : $explicit;
+		} else {
+			$index = absint( $package_id );
+			if ( '' === $rate_id ) {
+				unset( $explicit[ $index ] );
+			} else {
+				$explicit[ $index ] = $rate_id;
+			}
+		}
+
+		WC()->session->set( 'wsdm_explicit_shipping', $explicit );
 	}
 }

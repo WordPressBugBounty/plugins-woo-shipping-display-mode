@@ -73,6 +73,11 @@ class WC_Settings_Shipping_Display_Mode_Methods {
         wp_enqueue_script('jquery-ui-core');
 	    do_action('woocommerce_update_options_shipping_mode');
         $shiiping_method_get_value = get_option('woocommerce_shipping_method_format');
+        $wsdm_add_placeholder      = get_option( 'wsdm_add_shipping_placeholder', 'no' );
+        $wsdm_placeholder_text     = get_option( 'wsdm_shipping_placeholder_text', '' );
+        if ( ! is_string( $wsdm_placeholder_text ) || '' === trim( $wsdm_placeholder_text ) ) {
+            $wsdm_placeholder_text = __( 'Select Shipping', 'woo-shipping-display-mode' );
+        }
         ?>
         <h3><?php esc_html_e('Shipping Method Display Mode', 'woo-shipping-display-mode'); ?></h3>
         <table class="form-table" id="shipping_display_table">
@@ -101,6 +106,13 @@ class WC_Settings_Shipping_Display_Mode_Methods {
                                     ?>>
                                     <span><?php esc_html_e('Dropdown', 'woo-shipping-display-mode'); ?></span>
                                 </label>
+                                <div class="wsdm-placeholder-setting<?php echo ( 'select' === $shiiping_method_get_value ) ? '' : ' is-hidden'; ?>">
+                                    <label for="wsdm_add_shipping_placeholder">
+                                        <input type="checkbox" id="wsdm_add_shipping_placeholder" name="wsdm_add_shipping_placeholder" value="yes" <?php checked( 'yes', $wsdm_add_placeholder ); ?> />
+                                        <?php esc_html_e( 'Add placeholder', 'woo-shipping-display-mode' ); ?>
+                                    </label>
+                                    <input type="text" class="wsdm-placeholder-text" id="wsdm_shipping_placeholder_text" name="wsdm_shipping_placeholder_text" value="<?php echo esc_attr( $wsdm_placeholder_text ); ?>" placeholder="<?php esc_attr_e( 'Select Shipping', 'woo-shipping-display-mode' ); ?>" aria-label="<?php esc_attr_e( 'Placeholder text', 'woo-shipping-display-mode' ); ?>" />
+                                </div>
                             </li>
                         </ul>
                     </fieldset>
@@ -146,7 +158,21 @@ class WC_Settings_Shipping_Display_Mode_Methods {
             if (!empty($woocommerce_shipping_method_format)) {
                 $display_mode = sanitize_text_field($woocommerce_shipping_method_format);
 
+                if ( ! in_array( $display_mode, array( 'radio', 'select' ), true ) ) {
+                    return;
+                }
+
                 update_option( 'woocommerce_shipping_method_format', $display_mode, 'yes' );
+
+                $placeholder_enabled = filter_input( INPUT_POST, 'wsdm_add_shipping_placeholder', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+                update_option( 'wsdm_add_shipping_placeholder', ( 'yes' === $placeholder_enabled ) ? 'yes' : 'no', 'yes' );
+
+                $placeholder_text = filter_input( INPUT_POST, 'wsdm_shipping_placeholder_text', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+                $placeholder_text = is_string( $placeholder_text ) ? sanitize_text_field( $placeholder_text ) : '';
+                if ( '' === $placeholder_text ) {
+                    $placeholder_text = __( 'Select Shipping', 'woo-shipping-display-mode' );
+                }
+                update_option( 'wsdm_shipping_placeholder_text', $placeholder_text, 'yes' );
             }
         }
     }

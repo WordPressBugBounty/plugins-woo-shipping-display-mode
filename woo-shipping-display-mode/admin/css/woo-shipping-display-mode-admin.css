@@ -51,6 +51,25 @@ width: 80% !important;
 #shipping_display_table td{
 width: 20%;
 }
+.wsdm-placeholder-setting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0 0 25px;
+}
+.wsdm-placeholder-setting.is-hidden {
+    display: none;
+}
+.wsdm-placeholder-setting label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+.wsdm-placeholder-setting .wsdm-placeholder-text {
+    width: 220px;
+    max-width: 100%;
+}
 #shipping_display_table th img.help_tip {
     margin: 0 0 0 3px;
 }

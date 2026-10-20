@@ -158,6 +158,8 @@
         
         WSDM.config.shipping_format = sanitizeString(params.shipping_format, 'radio');
         WSDM.config.is_blocks_enabled = Boolean(params.is_blocks_enabled);
+        WSDM.config.placeholder_enabled = Boolean(params.placeholder_enabled);
+        WSDM.config.placeholder_text = sanitizeString(params.placeholder_text, 'Select Shipping');
         
         logDebug('Final config - shipping_format: ' + WSDM.config.shipping_format + ', is_blocks_enabled: ' + WSDM.config.is_blocks_enabled);
         
@@ -175,10 +177,15 @@
      * Global handler for shipping select changes (fallback)
      */
     function handleShippingSelectChange($select) {
+        if (WSDM.cache.handlingShippingChange) {
+            return;
+        }
+
         const selectedValue = $select.val();
         const packageIndex = $select.data('package-index') || 0;
         
         logDebug('Handling select change - preventing HTML refresh');
+        WSDM.cache.handlingShippingChange = true;
         WSDM.cache.selectChangeInProgress = true;
         
         // Store current state before triggering WooCommerce update
@@ -189,16 +196,21 @@
         const $hiddenRadios = $wrapper.find('.wsdm-hidden-shipping-radios');
         
         if ($hiddenRadios.length) {
-            const $hiddenRadio = $hiddenRadios.find('input[value="' + selectedValue + '"]');
-            if ($hiddenRadio.length) {
+            if (isPlaceholderEnabled() && !selectedValue) {
                 $hiddenRadios.find('input[type="radio"]').prop('checked', false);
-                $hiddenRadio.prop('checked', true);
-                
-                // Trigger change directly without using jQuery trigger to avoid interference
-                const event = new Event('change', { bubbles: true });
-                $hiddenRadio[0].dispatchEvent(event);
-                
-                logDebug('Global handler updated hidden radio for package ' + packageIndex);
+                setEmptyShippingMethodField($select, true);
+            } else {
+                setEmptyShippingMethodField($select, false);
+                const $hiddenRadio = $hiddenRadios.find('input[value="' + selectedValue + '"]');
+                if ($hiddenRadio.length) {
+                    $hiddenRadios.find('input[type="radio"]').prop('checked', false);
+                    $hiddenRadio.prop('checked', true);
+
+                    const event = new Event('change', { bubbles: true });
+                    $hiddenRadio[0].dispatchEvent(event);
+
+                    logDebug('Global handler updated hidden radio for package ' + packageIndex);
+                }
             }
         }
         
@@ -229,6 +241,8 @@
             }
         }, 50);
         
+        WSDM.cache.handlingShippingChange = false;
+
         // Clear the flag after sufficient delay
         setTimeout(function() {
             WSDM.cache.selectChangeInProgress = false;
@@ -464,6 +478,9 @@
             
             populateClassicOptions(packageData.methods, $select);
             logDebug('Populated ' + $select.find('option').length + ' options');
+            if (isPlaceholderEnabled() && !$select.val()) {
+                setEmptyShippingMethodField($select, true);
+            }
             
             // Create hidden radio buttons for WooCommerce compatibility
             const $hiddenRadios = createHiddenRadiosForPackage(packageData);
@@ -530,11 +547,17 @@
      * Populate classic select options
      */
     function populateClassicOptions($shippingOptions, $select) {
+        let hasChecked = false;
+
         $shippingOptions.each(function() {
             const $radio = $(this);
             const label = sanitizeString($radio.closest('li').text().trim());
             const value = sanitizeAttribute($radio.val());
             const isChecked = $radio.prop('checked');
+
+            if (isChecked) {
+                hasChecked = true;
+            }
             
             $('<option>', {
                 value: value,
@@ -542,6 +565,10 @@
                 selected: isChecked
             }).appendTo($select);
         });
+
+        if (isPlaceholderEnabled()) {
+            prependPlaceholderOption($select, !hasChecked);
+        }
     }
 
     /**
@@ -638,27 +665,33 @@
         $select.off('change.wsdm');
         
         $select.on('change.wsdm', function() {
+            if (WSDM.cache.handlingShippingChange) {
+                return;
+            }
+
+            WSDM.cache.handlingShippingChange = true;
+
             const selectedValue = $(this).val();
             const selectId = $(this).attr('id');
             logDebug('Package ' + packageIndex + ' select changed to: ' + selectedValue + ' (ID: ' + selectId + ')');
             
             // Set flag to prevent re-initialization
             WSDM.cache.selectChangeInProgress = true;
-            
-            // Update the corresponding hidden radio button
-            const $hiddenRadio = $hiddenRadios.find('input[value="' + selectedValue + '"]');
-            if ($hiddenRadio.length) {
-                // Uncheck all hidden radios in this package first
+
+            if (isPlaceholderEnabled() && !selectedValue) {
                 $hiddenRadios.find('input[type="radio"]').prop('checked', false);
-                
-                // Check the selected one
-                $hiddenRadio.prop('checked', true);
-                
-                // Trigger change event on the hidden radio for WooCommerce
-                $hiddenRadio.trigger('change');
-                logDebug('Hidden radio updated for package ' + packageIndex);
+                setEmptyShippingMethodField($(this), true);
             } else {
-                logDebug('No hidden radio found for value: ' + selectedValue);
+                setEmptyShippingMethodField($(this), false);
+                const $hiddenRadio = $hiddenRadios.find('input[value="' + selectedValue + '"]');
+                if ($hiddenRadio.length) {
+                    $hiddenRadios.find('input[type="radio"]').prop('checked', false);
+                    $hiddenRadio.prop('checked', true);
+                    $hiddenRadio.trigger('change');
+                    logDebug('Hidden radio updated for package ' + packageIndex);
+                } else {
+                    logDebug('No hidden radio found for value: ' + selectedValue);
+                }
             }
             
             // Get form context for proper WooCommerce integration
@@ -681,11 +714,8 @@
                 }
             }
             
-            // Additional fallback for legacy WooCommerce versions
-            if (typeof wc_checkout_params !== 'undefined') {
-                $(this).trigger('change');
-            }
-            
+            WSDM.cache.handlingShippingChange = false;
+
             // Force form submission for immediate update - delay to prevent conflicts
             setTimeout(function() {
                 if ($form.length) {
@@ -824,6 +854,10 @@
             }).appendTo($select);
         });
 
+        if (isPlaceholderEnabled()) {
+            prependPlaceholderOption($select, !$radios.filter(':checked').length);
+        }
+
         // SVG arrow same as country select
         const $svg = $(
             '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="wc-blocks-components-select__expand" aria-hidden="true" focusable="false">' +
@@ -844,16 +878,21 @@
         // Handle selection changes -> sync with hidden radio and trigger Store API
         $select.on('change', function() {
             const selectedRate = $(this).val();
+            const match = String($(this).attr('data-package-id') || '').match(/radio-control-(\d+)/);
+            const packageId = match ? parseInt(match[1], 10) : 0;
+
+            if (isPlaceholderEnabled() && !selectedRate) {
+                $wrapper.find('input[type="radio"]').prop('checked', false);
+                if (typeof wp !== 'undefined' && wp.data && wp.data.dispatch('wc/store/cart')) {
+                    wp.data.dispatch('wc/store/cart').selectShippingRate('', packageId);
+                }
+                return;
+            }
             
-            // Update hidden radio to keep React state in sync
             const $hiddenRadio = $wrapper.find('input[type="radio"][value="' + selectedRate + '"]');
             if ($hiddenRadio.length) {
                 $hiddenRadio.prop('checked', true).trigger('change');
             }
-            
-            // Also dispatch to Store API as backup
-            const match = String($(this).attr('data-package-id') || '').match(/radio-control-(\d+)/);
-            const packageId = match ? parseInt(match[1], 10) : 0;
             
             if (typeof wp !== 'undefined' && wp.data && wp.data.dispatch('wc/store/cart')) {
                 wp.data.dispatch('wc/store/cart').selectShippingRate(selectedRate, packageId);
@@ -920,15 +959,17 @@
             }
             
             const currentValue = $dropdown.val();
-            
-            // Check if options actually changed by comparing values
             const newValues = $radios.map(function() { return $(this).val(); }).get().sort();
-            const oldValues = $dropdown.find('option').map(function() { return $(this).val(); }).get().sort();
+            const oldValues = $dropdown.find('option').map(function() {
+                const value = $(this).val();
+                return value ? value : null;
+            }).get().filter(Boolean).sort();
             
             if (JSON.stringify(newValues) === JSON.stringify(oldValues)) {
-                // Options haven't changed, just update selection
                 const checkedValue = $radios.filter(':checked').val();
-                if (checkedValue && checkedValue !== currentValue) {
+                if (isPlaceholderEnabled()) {
+                    $dropdown.val(checkedValue || '');
+                } else if (checkedValue && checkedValue !== currentValue) {
                     $dropdown.val(checkedValue);
                 }
                 return;
@@ -992,6 +1033,17 @@
                     selected: $radio.is(':checked')
                 }).appendTo($dropdown);
             });
+
+            if (isPlaceholderEnabled()) {
+                const checkedValue = $radios.filter(':checked').val();
+                prependPlaceholderOption($dropdown, !checkedValue);
+                if (checkedValue) {
+                    $dropdown.val(checkedValue);
+                } else {
+                    $dropdown.val('');
+                }
+                return;
+            }
             
             // Set the correct value based on radio state or fallback
             if (checkedValue) {
@@ -1144,6 +1196,49 @@
      */
     function isWpDataAvailable() {
         return typeof wp !== 'undefined' && wp.data;
+    }
+
+    function isPlaceholderEnabled() {
+        return WSDM.config.placeholder_enabled === true;
+    }
+
+    function getPlaceholderText() {
+        return sanitizeString(WSDM.config.placeholder_text, 'Select Shipping');
+    }
+
+    function prependPlaceholderOption($select, selected) {
+        $select.find('option[value=""]').remove();
+        $('<option>', {
+            value: '',
+            text: getPlaceholderText(),
+            selected: !!selected
+        }).prependTo($select);
+
+        if (selected) {
+            $select.val('');
+        }
+    }
+
+    function setEmptyShippingMethodField($select, enabled) {
+        const packageIndex = $select.attr('data-index') || $select.data('package-index') || 0;
+        const $field = $select.siblings('.wsdm-empty-shipping-method');
+
+        if (!enabled) {
+            $field.remove();
+            return;
+        }
+
+        const $empty = $field.length ? $field : $('<input>', {
+            type: 'hidden',
+            class: 'wsdm-empty-shipping-method',
+            name: 'shipping_method[' + packageIndex + ']'
+        });
+
+        $empty.attr('data-index', packageIndex).val('');
+
+        if (!$field.length) {
+            $select.after($empty);
+        }
     }
 
     /**
